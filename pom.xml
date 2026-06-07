@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.github.de-gupta</groupId>
+        <artifactId>de-gupta-parent</artifactId>
+        <version>0.1.0</version>
+    </parent>
+
+    <name>taskAutomation</name>
+    <artifactId>${project.name}</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <scm>
+        <connection>scm:git:ssh://git@github.com/de-gupta/task.automation.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/de-gupta/task.automation.git</developerConnection>
+        <url>https://github.com/de-gupta/task.automation.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
+</project>
