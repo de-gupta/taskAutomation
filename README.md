@@ -6,9 +6,10 @@
 - a REST API
 - OpenAPI / Swagger documentation
 
-The repository currently ships with one example task:
+The repository currently ships with two example tasks:
 
 - `print-text`
+- `create-dat-file`
 
 The important user-facing idea is simple:
 
@@ -24,7 +25,7 @@ Out of the box, this repository provides:
 
 - a packaged CLI application
 - a packaged REST application
-- task-specific shell wrappers such as `print-text`
+- task-specific shell wrappers such as `print-text` and `create-dat-file`
 - generated OpenAPI documentation for registered tasks
 
 Current packaged artifacts:
@@ -34,9 +35,10 @@ Current packaged artifacts:
 
 ## Current Example Task
 
-The repository currently includes one registered task:
+The repository currently includes two registered tasks:
 
 - `print-text`
+- `create-dat-file`
 
 It can:
 
@@ -74,6 +76,34 @@ print-text --text hello --repeat 2 --uppercase
 
 ```bash
 print-text --text hello --repeat 2 --prefix "NOTE: " --uppercase
+```
+
+### `create-dat-file` options
+
+- `--file-name <string>`: required
+- `--text <string>`: required
+- `--uppercase`: optional boolean flag
+- `--overwrite`: optional boolean flag
+
+Behavior:
+
+- if `--file-name` does not end with `.dat`, the extension is added automatically
+- `--uppercase` defaults to `false`
+- `--overwrite` defaults to `false`
+- output is the full absolute path of the created file
+
+Examples:
+
+```bash
+create-dat-file --file-name ./demo --text "hello world"
+```
+
+```bash
+create-dat-file --file-name ./demo.dat --text "hello world" --uppercase
+```
+
+```bash
+create-dat-file --file-name ./demo.dat --text "hello world" --overwrite
 ```
 
 ## Requirements
@@ -114,6 +144,7 @@ Then you can run:
 
 ```bash
 print-text --text hello --repeat 2
+create-dat-file --file-name ./demo --text "hello world"
 ```
 
 If you want a different install location:
@@ -140,6 +171,7 @@ If `C:\Tools\task-automation` is on `PATH`, you can then run:
 
 ```powershell
 print-text --text hello --repeat 2
+create-dat-file --file-name .\demo --text "hello world"
 ```
 
 ## Build
@@ -175,6 +207,7 @@ java -jar target/taskAutomation-0.0.1-SNAPSHOT-cli.jar --list-commands
 Current output should include:
 
 ```text
+create-dat-file
 print-text
 ```
 
@@ -182,6 +215,10 @@ print-text
 
 ```bash
 java -jar target/taskAutomation-0.0.1-SNAPSHOT-cli.jar print-text --text hello --repeat 2
+```
+
+```bash
+java -jar target/taskAutomation-0.0.1-SNAPSHOT-cli.jar create-dat-file --file-name ./demo --text "hello world"
 ```
 
 ### Show help
@@ -206,6 +243,7 @@ or directly:
 
 ```bash
 print-text --text hello --repeat 2
+create-dat-file --file-name ./demo --text "hello world"
 ```
 
 ## CLI Wrapper Scripts
@@ -318,6 +356,29 @@ NOTE: HELLO
 NOTE: HELLO
 ```
 
+For `create-dat-file`, the endpoint is:
+
+```text
+POST /api/tasks/create-dat-file/execute
+```
+
+Example request body:
+
+```json
+{
+  "fileName": "./demo",
+  "text": "hello world",
+  "upperCase": true,
+  "overwrite": false
+}
+```
+
+Example response:
+
+```text
+/absolute/path/to/demo.dat
+```
+
 The REST endpoint exists only while the REST application is running.
 
 ## Swagger / OpenAPI
@@ -329,9 +390,9 @@ Useful endpoints:
 - `/v3/api-docs`
 - `/swagger-ui/index.html`
 
-For `print-text`, Swagger should show:
+For registered tasks such as `print-text` and `create-dat-file`, Swagger should show:
 
-- the concrete task path `/api/tasks/print-text/execute`
+- the concrete task paths such as `/api/tasks/print-text/execute` and `/api/tasks/create-dat-file/execute`
 - task-specific request fields
 - descriptions for those fields
 - documented defaults where applicable
@@ -368,6 +429,7 @@ So collisions fail fast instead of producing ambiguous behavior.
 ```bash
 mvn -q -DskipTests package
 java -jar target/taskAutomation-0.0.1-SNAPSHOT-cli.jar print-text --text hello --repeat 2
+java -jar target/taskAutomation-0.0.1-SNAPSHOT-cli.jar create-dat-file --file-name ./demo --text "hello world"
 ```
 
 ### Build and run the REST jar
@@ -388,7 +450,7 @@ java -jar target/taskAutomation-0.0.1-SNAPSHOT-cli.jar --list-commands
 - CLI commands are jar-based, not native executables
 - each CLI run starts a fresh JVM process, so startup is not instant
 - REST is available only while the REST application is running
-- the repository currently ships with one example task: `print-text`
+- the repository currently ships with two example tasks: `print-text` and `create-dat-file`
 
 ## Summary
 
@@ -405,4 +467,5 @@ The quickest way to get productive on bash is:
 ```bash
 ./scripts/bootstrap-cli.sh
 print-text --text hello --repeat 2
+create-dat-file --file-name ./demo --text "hello world"
 ```

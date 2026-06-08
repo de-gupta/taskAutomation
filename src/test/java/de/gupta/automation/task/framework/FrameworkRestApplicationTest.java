@@ -2,6 +2,7 @@ package de.gupta.automation.task.framework;
 
 import de.gupta.automation.task.framework.rest.FrameworkRestApplication;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,6 +26,9 @@ class FrameworkRestApplicationTest
 
 	@Autowired
 	private TestRestTemplate testRestTemplate;
+
+	@TempDir
+	Path tempDir;
 
 	@Test
 	void shouldExecuteDescriptorDrivenRestEndpoint()
@@ -54,12 +60,39 @@ class FrameworkRestApplicationTest
 		assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
 		assertThat(response.getBody())
 				.contains("\"/api/tasks/print-text/execute\"")
+				.contains("\"/api/tasks/create-dat-file/execute\"")
 				.doesNotContain("\"/api/tasks/{taskName}/execute\"")
 				.contains("\"PrintTextRequest\"")
+				.contains("\"CreateDatFileRequest\"")
 				.contains("\"text\"")
 				.contains("\"repeatCount\"")
 				.contains("\"prefix\"")
 				.contains("\"upperCase\"")
+				.contains("\"fileName\"")
+				.contains("\"overwrite\"")
 				.contains("\"default\":\"OUTPUT: \"");
+	}
+
+	@Test
+	void shouldExecuteDescriptorDrivenCreateDatFileEndpoint() throws Exception
+	{
+		final HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		final Path filePath = tempDir.resolve("rest-created-file");
+		final HttpEntity<Map<String, Object>> request = new HttpEntity<>(Map.of(
+				"fileName", filePath.toString(),
+				"text", "rest text",
+				"upperCase", true,
+				"overwrite", false), headers);
+
+		final ResponseEntity<String> response = testRestTemplate.postForEntity(
+				"http://localhost:" + port + "/api/tasks/create-dat-file/execute",
+				request,
+				String.class);
+
+		final Path expectedPath = Path.of(filePath.toAbsolutePath() + ".dat");
+		assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+		assertThat(response.getBody()).isEqualTo(expectedPath.toString());
+		assertThat(Files.readString(expectedPath)).isEqualTo("REST TEXT");
 	}
 }

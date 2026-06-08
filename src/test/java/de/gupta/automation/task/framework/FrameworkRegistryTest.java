@@ -16,11 +16,12 @@ class FrameworkRegistryTest
 	private TaskRegistry taskRegistry;
 
 	@Test
-	void shouldRegisterDescriptorDrivenPrintTextTaskOnly()
+	void shouldRegisterDescriptorDrivenTasks()
 	{
 		assertThat(taskRegistry.findByName("print-text")).isPresent();
+		assertThat(taskRegistry.findByName("create-dat-file")).isPresent();
 		assertThat(taskRegistry.descriptors())
 				.extracting(TaskDescriptor::name)
-				.containsExactly("print-text");
+				.containsExactlyInAnyOrder("print-text", "create-dat-file");
 	}
 }
