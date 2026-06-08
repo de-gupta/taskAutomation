@@ -43,4 +43,23 @@ class FrameworkRestApplicationTest
 		assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
 		assertThat(response.getBody()).isEqualTo("REST:sample" + System.lineSeparator() + "REST:sample");
 	}
+
+	@Test
+	void shouldExposeDescriptorDrivenOpenApiDocumentation()
+	{
+		final ResponseEntity<String> response = testRestTemplate.getForEntity(
+				"http://localhost:" + port + "/v3/api-docs",
+				String.class);
+
+		assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+		assertThat(response.getBody())
+				.contains("\"/api/tasks/print-text/execute\"")
+				.doesNotContain("\"/api/tasks/{taskName}/execute\"")
+				.contains("\"PrintTextRequest\"")
+				.contains("\"text\"")
+				.contains("\"repeatCount\"")
+				.contains("\"prefix\"")
+				.contains("\"upperCase\"")
+				.contains("\"default\":\"OUTPUT: \"");
+	}
 }

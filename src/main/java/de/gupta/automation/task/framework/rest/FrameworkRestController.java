@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.gupta.automation.task.framework.domain.port.TaskDescriptor;
 import de.gupta.automation.task.framework.registry.TaskRegistry;
 import de.gupta.automation.task.framework.runtime.TaskOptionsBinder;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+@Hidden
 @RestController
 public final class FrameworkRestController
 {
