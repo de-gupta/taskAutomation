@@ -1,5 +1,6 @@
 package de.gupta.automation.task.framework.cli;
 
+import org.springframework.boot.Banner;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -18,6 +19,12 @@ public final class FrameworkCliApplication
 	public static void main(final String[] args)
 	{
 		try (ConfigurableApplicationContext context = new SpringApplicationBuilder(FrameworkCliApplication.class)
+				.bannerMode(Banner.Mode.OFF)
+				.logStartupInfo(false)
+				.properties(
+						"spring.main.banner-mode=off",
+						"spring.main.log-startup-info=false",
+						"logging.level.root=ERROR")
 				.web(WebApplicationType.NONE)
 				.run())
 		{

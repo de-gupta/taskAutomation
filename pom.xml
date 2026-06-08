@@ -56,6 +56,28 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
+                <executions>
+                    <execution>
+                        <id>repackage-cli</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>cli</classifier>
+                            <mainClass>de.gupta.automation.task.framework.cli.FrameworkCliApplication</mainClass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>repackage-rest</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>rest</classifier>
+                            <mainClass>de.gupta.automation.task.framework.rest.FrameworkRestApplication</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

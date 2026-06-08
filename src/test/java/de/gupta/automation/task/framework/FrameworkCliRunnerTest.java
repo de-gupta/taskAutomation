@@ -43,4 +43,22 @@ class FrameworkCliRunnerTest
 			System.setOut(originalOut);
 		}
 	}
+
+	@Test
+	void shouldListRegisteredCliCommands()
+	{
+		final PrintStream originalOut = System.out;
+		final ByteArrayOutputStream output = new ByteArrayOutputStream();
+		try
+		{
+			System.setOut(new PrintStream(output, true, StandardCharsets.UTF_8));
+			final int exitCode = frameworkCliRunner.run(new String[]{"--list-commands"});
+			assertThat(exitCode).isZero();
+			assertThat(output.toString(StandardCharsets.UTF_8)).contains("print-text");
+		}
+		finally
+		{
+			System.setOut(originalOut);
+		}
+	}
 }

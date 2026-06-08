@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import picocli.CommandLine;
 import picocli.CommandLine.ParseResult;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -29,6 +30,15 @@ public final class FrameworkCliRunner
 
 	public int run(final String[] args)
 	{
+		if (isListCommandsRequest(args))
+		{
+			taskRegistry.descriptors().stream()
+			            .map(descriptor -> descriptor.cli().commandName())
+			            .sorted()
+			            .forEach(System.out::println);
+			return 0;
+		}
+
 		final ParseResult parseResult = commandLine.parseArgs(args);
 		if (CommandLine.printHelpIfRequested(parseResult))
 		{
@@ -78,5 +88,10 @@ public final class FrameworkCliRunner
 	private static <O> String renderCli(final TaskDescriptor<?, ?, ?> descriptor, final Object output)
 	{
 		return ((TaskDescriptor<O, ?, ?>) descriptor).cli().outputRenderer().render((O) output);
+	}
+
+	private static boolean isListCommandsRequest(final String[] args)
+	{
+		return args.length == 1 && Arrays.asList("--list-commands", "list-commands").contains(args[0]);
 	}
 }
