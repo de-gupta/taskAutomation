@@ -19,6 +19,241 @@ The important user-facing idea is simple:
 
 You do not need to hand-write a CLI command or REST controller for each task.
 
+## Add A New Task
+
+This is the most important workflow in the repository.
+
+To add a new task, a developer should write:
+
+1. domain types for the task
+2. the task logic
+3. the input assembler
+4. the validator
+5. one registration class
+
+That is all.
+
+The framework then provides:
+
+- a CLI command
+- a REST endpoint
+- OpenAPI / Swagger documentation
+- CLI wrapper installation for the command
+
+### What You Need To Write
+
+For a task named `create-dat-file`, the developer writes these classes.
+
+#### 1. `<TaskName>MandatoryOptions`
+
+Example:
+
+- [CreateDatFileMandatoryOptions.java](E:/Projects/Professional/OpenSource/java/de-gupta/task.automation/taskAutomation/src/main/java/de/gupta/automation/task/implementations/file/dat/create/domain/CreateDatFileMandatoryOptions.java)
+
+Purpose:
+
+- contains the required user inputs
+- defines what the task cannot run without
+
+For `create-dat-file`, those are:
+
+- `fileName`
+- `text`
+
+Reasoning:
+
+- required inputs should be explicit
+- CLI and REST both bind into the same required-options type
+- validation can treat required and optional data differently
+
+#### 2. `<TaskName>OptionalOptions`
+
+Example:
+
+- [CreateDatFileOptionalOptions.java](E:/Projects/Professional/OpenSource/java/de-gupta/task.automation/taskAutomation/src/main/java/de/gupta/automation/task/implementations/file/dat/create/domain/CreateDatFileOptionalOptions.java)
+
+Purpose:
+
+- contains the optional user inputs
+- carries toggles and non-essential parameters
+
+For `create-dat-file`, those are:
+
+- `upperCase`
+- `overwrite`
+
+Reasoning:
+
+- optional values often have defaults
+- keeping them separate makes defaulting and docs clearer
+- the framework can document them as optional in CLI and Swagger
+
+#### 3. `<TaskName>Input`
+
+Example:
+
+- [CreateDatFileInput.java](E:/Projects/Professional/OpenSource/java/de-gupta/task.automation/taskAutomation/src/main/java/de/gupta/automation/task/implementations/file/dat/create/domain/CreateDatFileInput.java)
+
+Purpose:
+
+- defines the canonical input for the task logic
+- contains the normalized values the task actually executes on
+
+For `create-dat-file`, that includes:
+
+- resolved absolute file path
+- text to write
+- normalized boolean flags
+
+Reasoning:
+
+- the business task should not care about raw transport input
+- normalization belongs before execution
+- this keeps task logic clean and deterministic
+
+#### 4. `<TaskName>Task`
+
+Example:
+
+- [CreateDatFileTask.java](E:/Projects/Professional/OpenSource/java/de-gupta/task.automation/taskAutomation/src/main/java/de/gupta/automation/task/implementations/file/dat/create/domain/CreateDatFileTask.java)
+
+Purpose:
+
+- contains the actual business behavior
+- implements `TaskFunction<I, O>`
+
+For `create-dat-file`, it:
+
+- creates the target file
+- writes the text
+- respects the overwrite flag
+- returns the full path
+
+Reasoning:
+
+- this should be the smallest, clearest business unit
+- no CLI parsing
+- no REST concerns
+- no defaulting logic
+
+#### 5. `<TaskName>InputAssembler`
+
+Example:
+
+- [CreateDatFileInputAssembler.java](E:/Projects/Professional/OpenSource/java/de-gupta/task.automation/taskAutomation/src/main/java/de/gupta/automation/task/implementations/file/dat/create/domain/CreateDatFileInputAssembler.java)
+
+Purpose:
+
+- converts `MandatoryOptions` and `OptionalOptions` into canonical `Input`
+- performs normalization and defaulting
+
+For `create-dat-file`, it:
+
+- ensures the file name ends with `.dat`
+- resolves the path to an absolute normalized path
+- combines required and optional values into one canonical input
+
+Reasoning:
+
+- this is the right place for defaults and normalization
+- keeping it separate prevents transport-specific hacks
+- both CLI and REST share the same assembly logic
+
+#### 6. `<TaskName>Validator`
+
+Example:
+
+- [CreateDatFileValidator.java](E:/Projects/Professional/OpenSource/java/de-gupta/task.automation/taskAutomation/src/main/java/de/gupta/automation/task/implementations/file/dat/create/domain/CreateDatFileValidator.java)
+
+Purpose:
+
+- validates required and optional values before execution
+- implements `TaskValidator<MO, OO>`
+
+For `create-dat-file`, it checks:
+
+- file name is present
+- text is present
+
+Reasoning:
+
+- validation should happen once in the canonical pipeline
+- validation should not be duplicated in CLI and REST
+- semantic task rules belong with the task, not the transport
+
+#### 7. `<TaskName>Registration`
+
+Example:
+
+- [CreateDatFileRegistration.java](E:/Projects/Professional/OpenSource/java/de-gupta/task.automation/taskAutomation/src/main/java/de/gupta/automation/task/implementations/file/dat/create/framework/CreateDatFileRegistration.java)
+
+Purpose:
+
+- registers the task with the framework
+- creates a `TaskDescriptor`
+- declares CLI and REST metadata
+
+This is where the developer defines:
+
+- task name
+- version
+- `Input`, `Output`, `MandatoryOptions`, `OptionalOptions` types
+- task function, assembler, and validator
+- CLI option names and descriptions
+- REST field names and endpoint path
+- documented defaults
+- output rendering
+
+Reasoning:
+
+- this is the one framework-facing class the task needs
+- it keeps transport metadata out of the business classes
+- the framework uses it to expose the task everywhere
+
+### Recommended Package Structure
+
+For a task named `create-dat-file`, use:
+
+- `src/main/java/.../implementations/file/dat/create/domain`
+- `src/main/java/.../implementations/file/dat/create/framework`
+
+Put these classes in `domain`:
+
+- `CreateDatFileMandatoryOptions`
+- `CreateDatFileOptionalOptions`
+- `CreateDatFileInput`
+- `CreateDatFileTask`
+- `CreateDatFileInputAssembler`
+- `CreateDatFileValidator`
+
+Put this class in `framework`:
+
+- `CreateDatFileRegistration`
+
+### What You Do Not Need To Write
+
+You do not need to write:
+
+- a CLI command class
+- a REST controller
+- a request DTO for Swagger
+- a CLI launcher
+- a REST launcher
+
+The framework creates the exposed command, endpoint, and OpenAPI documentation from the registration metadata.
+
+### What Happens After You Add The Registration Class
+
+Once the registration bean is present and the app starts, the framework will:
+
+- add the task to `--list-commands`
+- expose a CLI command with the registered name
+- expose a REST endpoint at the registered path
+- include the task in Swagger / OpenAPI
+- generate a shell wrapper for the command when you run the CLI installer
+
+That is why the registration class is the key integration point.
+
 ## What You Get
 
 Out of the box, this repository provides:
