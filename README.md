@@ -40,6 +40,77 @@ The framework then provides:
 - OpenAPI / Swagger documentation
 - CLI wrapper installation for the command
 
+### Fastest Way To Start
+
+You do not need to create the package structure by hand.
+
+The repository includes scaffold scripts that generate a first draft of:
+
+- `MandatoryOptions`
+- `OptionalOptions`
+- `Input`
+- `Task`
+- `InputAssembler`
+- `Validator`
+- `Registration`
+
+The generated output is intentionally a draft:
+
+- it uses naming conventions
+- it infers CLI and REST names from field names
+- it adds a best-effort registration class
+- it leaves the business logic and validation for the developer to finish
+
+#### PowerShell scaffold
+
+Use this on Windows:
+
+```powershell
+.\scripts\scaffold-task.ps1 `
+  -ImplementationPath file\dat\create `
+  -TaskName create-dat-file `
+  -MandatoryFields "fileName:String,text:String" `
+  -OptionalFields "upperCase:boolean,overwrite:boolean"
+```
+
+#### Bash scaffold
+
+Use this on Linux/macOS:
+
+```bash
+./scripts/scaffold-task.sh file/dat/create create-dat-file "fileName:String,text:String" "upperCase:boolean,overwrite:boolean"
+```
+
+Arguments:
+
+- `ImplementationPath`: package path under `implementations`
+- `TaskName`: task name used for CLI and REST
+- `MandatoryFields`: comma-separated `name:type` list
+- `OptionalFields`: comma-separated `name:type` list, or `-` for none
+- `OutputType`: optional fifth argument, defaults to `String`
+
+Example with no optional fields:
+
+```bash
+./scripts/scaffold-task.sh text/reverse reverse-text "text:String" - String
+```
+
+What the scaffold gives you:
+
+- package directories under `implementations/.../domain` and `implementations/.../framework`
+- draft Java records for options and input
+- a draft task class
+- a draft assembler
+- a draft validator
+- a draft registration class with inferred CLI and REST metadata
+
+What you still need to do afterward:
+
+- implement the business logic in `<TaskName>Task`
+- implement real validation in `<TaskName>Validator`
+- improve defaults and normalization in `<TaskName>InputAssembler`
+- refine descriptions and metadata in `<TaskName>Registration`
+
 ### What You Need To Write
 
 For a task named `create-dat-file`, the developer writes these classes.
