@@ -11,8 +11,12 @@
     </parent>
 
     <name>taskAutomation</name>
-    <artifactId>${project.name}</artifactId>
+    <artifactId>taskAutomation</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+
+    <properties>
+        <picocli.version>4.7.7</picocli.version>
+    </properties>
 
     <scm>
         <connection>scm:git:ssh://git@github.com/de-gupta/task.automation.git</connection>
@@ -20,5 +24,31 @@
         <url>https://github.com/de-gupta/task.automation.git</url>
         <tag>HEAD</tag>
     </scm>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+            <version>${picocli.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
