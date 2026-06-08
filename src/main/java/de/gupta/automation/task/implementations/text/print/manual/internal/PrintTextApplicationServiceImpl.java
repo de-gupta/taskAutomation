@@ -1,9 +1,9 @@
-package de.gupta.automation.task.implementations.text.print.internal;
+package de.gupta.automation.task.implementations.text.print.manual.internal;
 
 import org.springframework.stereotype.Service;
 
 import de.gupta.automation.task.template.domain.port.TaskFacade;
-import de.gupta.automation.task.implementations.text.print.api.PrintTextApplicationService;
+import de.gupta.automation.task.implementations.text.print.manual.api.PrintTextApplicationService;
 
 @Service
 final class PrintTextApplicationServiceImpl implements PrintTextApplicationService

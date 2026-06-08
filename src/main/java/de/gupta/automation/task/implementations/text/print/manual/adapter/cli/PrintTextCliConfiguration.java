@@ -1,4 +1,4 @@
-package de.gupta.automation.task.implementations.text.print.adapter.cli;
+package de.gupta.automation.task.implementations.text.print.manual.adapter.cli;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

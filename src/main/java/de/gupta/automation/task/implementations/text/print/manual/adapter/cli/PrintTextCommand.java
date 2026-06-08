@@ -1,10 +1,10 @@
-package de.gupta.automation.task.implementations.text.print.adapter.cli;
+package de.gupta.automation.task.implementations.text.print.manual.adapter.cli;
 
 import java.util.concurrent.Callable;
 
 import org.springframework.stereotype.Component;
 
-import de.gupta.automation.task.implementations.text.print.api.PrintTextApplicationService;
+import de.gupta.automation.task.implementations.text.print.manual.api.PrintTextApplicationService;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;

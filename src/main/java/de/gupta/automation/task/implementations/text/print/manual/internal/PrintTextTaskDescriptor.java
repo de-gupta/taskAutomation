@@ -1,4 +1,4 @@
-package de.gupta.automation.task.implementations.text.print.internal;
+package de.gupta.automation.task.implementations.text.print.manual.internal;
 
 import de.gupta.automation.task.template.domain.port.TaskDescriptor;
 

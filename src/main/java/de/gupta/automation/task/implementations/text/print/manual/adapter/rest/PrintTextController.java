@@ -1,4 +1,4 @@
-package de.gupta.automation.task.implementations.text.print.adapter.rest;
+package de.gupta.automation.task.implementations.text.print.manual.adapter.rest;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.gupta.automation.task.implementations.text.print.api.PrintTextApplicationService;
+import de.gupta.automation.task.implementations.text.print.manual.api.PrintTextApplicationService;
 
 @RestController
 @RequestMapping("/api/tasks/print-text")

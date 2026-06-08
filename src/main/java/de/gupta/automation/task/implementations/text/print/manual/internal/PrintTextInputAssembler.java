@@ -1,4 +1,4 @@
-package de.gupta.automation.task.implementations.text.print.internal;
+package de.gupta.automation.task.implementations.text.print.manual.internal;
 
 import org.springframework.stereotype.Component;
 

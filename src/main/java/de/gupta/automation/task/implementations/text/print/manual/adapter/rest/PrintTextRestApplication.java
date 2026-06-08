@@ -1,4 +1,4 @@
-package de.gupta.automation.task.implementations.text.print.adapter.rest;
+package de.gupta.automation.task.implementations.text.print.manual.adapter.rest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package de.gupta.automation.task.implementations.text.print.api;
+package de.gupta.automation.task.implementations.text.print.manual.api;
 
 public interface PrintTextApplicationService
 {
