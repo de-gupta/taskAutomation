@@ -25,6 +25,7 @@ public final class FrameworkCliApplication
 		{
 			System.setProperty("logback.configurationFile", logbackConfig.toString());
 		}
+		System.setProperty("logback.statusListenerClass", FrameworkCliStatusListener.class.getName());
 		System.setProperty("org.springframework.boot.logging.LoggingSystem", "none");
 		try (ConfigurableApplicationContext context = new SpringApplicationBuilder(FrameworkCliApplication.class)
 				.bannerMode(Banner.Mode.OFF)
