@@ -17,7 +17,8 @@ public class FrameworkCliConfiguration
 	@Bean
 	CommandLine frameworkCommandLine(final TaskRegistry taskRegistry, final ObjectMapper objectMapper)
 	{
-		final CommandSpec rootSpec = CommandSpec.create().name("tasks").mixinStandardHelpOptions(true);
+		final CommandSpec rootSpec = CommandSpec.create().name("tasks");
+		rootSpec.addOption(helpOption());
 		final CommandLine rootCommand = new CommandLine(rootSpec);
 		final TaskOptionsBinder optionsBinder = new TaskOptionsBinder(objectMapper);
 
@@ -32,8 +33,8 @@ public class FrameworkCliConfiguration
 	                                            final TaskOptionsBinder optionsBinder)
 	{
 		final CommandSpec spec = CommandSpec.create()
-		                                    .name(descriptor.cli().commandName())
-		                                    .mixinStandardHelpOptions(true);
+		                                    .name(descriptor.cli().commandName());
+		spec.addOption(helpOption());
 		spec.usageMessage().description(descriptor.cli().description());
 
 		for (final TaskOptionDescriptor option : descriptor.cli().options())
@@ -50,5 +51,13 @@ public class FrameworkCliConfiguration
 		}
 
 		return new CommandLine(spec);
+	}
+
+	private static OptionSpec helpOption()
+	{
+		return OptionSpec.builder("-h", "--help")
+		                 .usageHelp(true)
+		                 .description("Show this help message and exit.")
+		                 .build();
 	}
 }

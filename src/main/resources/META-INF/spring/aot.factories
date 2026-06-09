@@ -1,0 +1,5 @@
+org.springframework.aot.hint.RuntimeHintsRegistrar=\
+de.gupta.automation.task.framework.aot.FrameworkCliRuntimeHints
+
+org.springframework.beans.factory.aot.BeanFactoryInitializationAotProcessor=\
+de.gupta.automation.task.framework.aot.TaskDescriptorBindingHintsAotProcessor
